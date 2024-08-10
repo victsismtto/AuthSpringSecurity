@@ -4,6 +4,7 @@ import com.example.auth.domain.product.Product;
 import com.example.auth.domain.product.ProductRequestDTO;
 import com.example.auth.domain.product.ProductResponseDTO;
 import com.example.auth.repositories.ProductRepository;
+import com.example.auth.services.product.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,18 +15,16 @@ import java.util.List;
 @RestController()
 @RequestMapping("product")
 public class ProductController {
-    @Autowired private ProductRepository repository;
+    @Autowired private ProductService service;
 
     @PostMapping
     public ResponseEntity<?> postProduct(@RequestBody @Valid ProductRequestDTO body){
-        Product newProduct = new Product(body);
-        repository.save(newProduct);
+        service.createProduct(body);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping
     public ResponseEntity<List<ProductResponseDTO>> getAllProducts(){
-        List<ProductResponseDTO> productList = repository.findAll().stream().map(ProductResponseDTO::new).toList();
-        return ResponseEntity.ok(productList);
+        return ResponseEntity.ok(service.listOfAllProducts());
     }
 }

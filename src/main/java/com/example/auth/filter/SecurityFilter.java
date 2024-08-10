@@ -2,7 +2,7 @@ package com.example.auth.filter;
 
 
 import com.example.auth.repositories.UserRepository;
-import com.example.auth.services.TokenService;
+import com.example.auth.services.security.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +25,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
-        String token = this.recoverToken(request);
+        String token = recoverToken(request);
         if(Optional.ofNullable(token).isPresent()) {
             String login = tokenService.validateToken(token);
             UserDetails user = userRepository.findByLogin(login);

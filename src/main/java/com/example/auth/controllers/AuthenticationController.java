@@ -5,7 +5,8 @@ import com.example.auth.domain.user.LoginResponseDTO;
 import com.example.auth.domain.user.RegisterDTO;
 import com.example.auth.domain.user.User;
 import com.example.auth.repositories.UserRepository;
-import com.example.auth.services.TokenService;
+import com.example.auth.services.authentication.AuthenticationService;
+import com.example.auth.services.security.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,26 +22,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("auth")
 public class AuthenticationController {
-    @Autowired private AuthenticationManager authenticationManager;
-    @Autowired private UserRepository repository;
-    @Autowired private TokenService tokenService;
+    @Autowired private AuthenticationService service;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO data){
-        UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
-        Authentication auth = authenticationManager.authenticate(usernamePassword);
-        String token = tokenService.generateToken((User) auth.getPrincipal());
-        return ResponseEntity.ok(new LoginResponseDTO(token));
+        return ResponseEntity.ok(new LoginResponseDTO(service.login(data)));
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO data) {
-        if(repository.findByLogin(data.login()) != null) {
-            return ResponseEntity.badRequest().build();
-        }
-        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        User newUser = new User(data.login(), encryptedPassword, data.role());
-        repository.save(newUser);
-        return ResponseEntity.ok().build();
+        return service.createUser(data);
     }
 }
