@@ -14,22 +14,18 @@ import java.util.List;
 @RestController()
 @RequestMapping("product")
 public class ProductController {
-
-    @Autowired
-    ProductRepository repository;
+    @Autowired private ProductRepository repository;
 
     @PostMapping
     public ResponseEntity<?> postProduct(@RequestBody @Valid ProductRequestDTO body){
         Product newProduct = new Product(body);
-
-        this.repository.save(newProduct);
+        repository.save(newProduct);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping
     public ResponseEntity<List<ProductResponseDTO>> getAllProducts(){
-        List<ProductResponseDTO> productList = this.repository.findAll().stream().map(ProductResponseDTO::new).toList();
-
+        List<ProductResponseDTO> productList = repository.findAll().stream().map(ProductResponseDTO::new).toList();
         return ResponseEntity.ok(productList);
     }
 }
