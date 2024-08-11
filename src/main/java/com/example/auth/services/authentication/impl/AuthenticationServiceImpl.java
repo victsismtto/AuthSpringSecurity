@@ -1,6 +1,7 @@
 package com.example.auth.services.authentication.impl;
 
 import com.example.auth.domain.user.AuthenticationDTO;
+import com.example.auth.domain.user.LoginResponseDTO;
 import com.example.auth.domain.user.RegisterDTO;
 import com.example.auth.domain.user.User;
 import com.example.auth.repositories.UserRepository;
@@ -23,7 +24,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired private UserRepository repository;
     @Autowired private TokenService tokenService;
     @Override
-    public String login(AuthenticationDTO data) {
+    public LoginResponseDTO login(AuthenticationDTO data) {
         UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
         Authentication auth = authenticationManager.authenticate(usernamePassword);
         return tokenService.generateToken((User) auth.getPrincipal());
