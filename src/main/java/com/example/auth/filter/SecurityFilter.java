@@ -31,8 +31,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         if(Optional.ofNullable(token).isPresent()) {
             String login = tokenService.validateToken(token);
             Optional<UserDetails> user = userRepository.findByLogin(login);
-            Collection<? extends GrantedAuthority> collection;
-            collection = user.<Collection<? extends GrantedAuthority>>map(UserDetails::getAuthorities).orElse(null);
+            Collection<? extends GrantedAuthority> collection = user.<Collection<? extends GrantedAuthority>>map(UserDetails::getAuthorities).orElse(null);
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, collection);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

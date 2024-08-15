@@ -24,9 +24,6 @@ public class TokenServiceImpl implements TokenService {
     @Value("${jwt.public.key}") private RSAPublicKey publicKey;
     @Autowired private JwtEncoder jwtEncoder;
     @Autowired private JwtDecoder jwtDecoder;
-    private static final String TIMEZONE_BRAZIL = "-03:00";
-    private static final String ISSUER_NAME = "auth-api";
-    private static final String RUNTIME_ERROR_DESCRIPTION = "Error while generating token";
 
     public LoginResponseDTO generateToken(User user) {
         Instant now = Instant.now();

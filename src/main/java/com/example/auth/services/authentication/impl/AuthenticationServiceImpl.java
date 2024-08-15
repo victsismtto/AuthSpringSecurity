@@ -29,7 +29,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         Authentication auth = authenticationManager.authenticate(usernamePassword);
         return tokenService.generateToken((User) auth.getPrincipal());
     }
-
     @Override
     public ResponseEntity<?> createUser(RegisterDTO data) {
         Optional<UserDetails> userDetails = repository.findByLogin(data.login());
